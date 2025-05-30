@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const MenuItem = require('../models/MenuItem');
 const Category = require('../models/Category');
+const Order = require('../models/Order');
 
+// Menu Management
 router.post('/menus', async (req, res) => {
   const item = new MenuItem(req.body);
   await item.save();
@@ -33,6 +35,7 @@ router.patch('/menus/:id/activate', async (req, res) => {
   res.json(item);
 });
 
+// Category Management
 router.get('/categories', async (req, res) => {
   const categories = await Category.find();
   res.json(categories);
@@ -55,5 +58,15 @@ router.delete('/categories/:id', async (req, res) => {
   await Category.findByIdAndDelete(id);
   res.status(204).send();
 });
+
+// Order Management
+router.put('/order/:id', async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
+  res.json(order);
+});
+
+
 
 module.exports = router;
